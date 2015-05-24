@@ -14,7 +14,7 @@ p1 + geom_point(aes(colour = factor(brewery), position = "jitter"), size = 3) +
   guides(color=guide_legend(title="Breweries")) +
   geom_hline(yintercept = brew.med) # median number of reviews
 # examining the best hoppy styles
-hop.me <- filter(me.beers.2, style_id == 150 | style_id == 140 | style_id == 97 | style_id == 116
+hop.me <- filter(me.beers.2, style_id == 150 | style_id == 140 | style_id == 97 | style_id == 116 |
   style_id == 154 | style_id == 128)
 hop.med <- median(hop.me$num_reviews)
 p2 <- ggplot(hop.me, aes(rAvg, num_reviews))
@@ -22,8 +22,8 @@ p2 + geom_point(aes(colour = factor(style)), size = 3) +
   xlab("Beer Ratings") + 
   ylab("Number of Reviews") + 
   ggtitle("Reviews and Ratings for Hoppy Maine Beers") + 
-  guides(color=guide_legend(title="Breweries")) + 
-  geom_text(aes(label=ifelse(rAvg > 4, as.character(name), '')), hjust=1.2, just=1.2) + 
+  guides(color=guide_legend(title="Styles")) + 
+  geom_text(aes(label=ifelse(rAvg > 4, as.character(name), ''),colour=factor(style)), hjust=1.2, vjust=0, , angle = 10) + 
   geom_hline(yintercept = hop.med)
 # examining the worst hoppy styles
 p3 <- ggplot(hop.me, aes(rAvg, num_reviews))
@@ -31,9 +31,17 @@ p3 + geom_point(aes(colour = factor(style)), size = 3) +
   xlab("Beer Ratings") + 
   ylab("Number of Reviews") + 
   ggtitle("Reviews and Ratings for Hoppy Maine Beers") + 
-  guides(color=guide_legend(title="Breweries")) + 
+  guides(color=guide_legend(title="Styles")) + 
   geom_text(aes(label=ifelse(rAvg < 3, as.character(name), '')), hjust=1.2, just=1.2) + 
   geom_hline(yintercept = hop.med)
+# examining abv by rating
+p4 <- ggplot(me.beers.2, aes(rAvg, abv))
+p4 + geom_point(aes(colour = num_reviews), size = 3) + 
+  xlab("Beer Ratings") + 
+  ylab("ABV") + 
+  ggtitle("ABV by Review") + 
+  guides(color=guide_legend(title="Number of Reviews")) 
+
 
 # best and worst beers
 mt <- me.beers.2[order(me.beers.2$rAvg), ]
