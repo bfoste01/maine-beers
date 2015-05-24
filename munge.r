@@ -10,3 +10,4 @@ me.beers.2 <- me.beers[!duplicated(me.beers), ]
 me.beers.2$rAvg <- as.numeric(as.character(me.beers.2$rAvg))
 me.beers.2$num_reviews <- as.numeric(as.character(me.beers.2$num_reviews))
 me.beers.2 <- filter(me.beers.2, num_reviews > 10)
+

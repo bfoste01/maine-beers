@@ -3,7 +3,8 @@
 # Some Fun Plotting
 #
 # is there any relationship between the number of reviews and rating?
-# not surprising that Allagash dominates in terms of popularity and rating while Shipyard is popular but terrible
+# not surprising that Allagash dominates in terms of popularity and rating while Shipyard/Sebago are popular but terrible
+brew.med <- median(me.beers.2$num_reviews)
 library(ggplot2)
 p1 <- ggplot(me.beers.2, aes(rAvg, num_reviews))
 p1 + geom_point(aes(colour = factor(brewery), position = "jitter"), size = 3) + 
@@ -11,15 +12,29 @@ p1 + geom_point(aes(colour = factor(brewery), position = "jitter"), size = 3) +
   ylab("Number of Reviews") + 
   ggtitle("Reviews and Ratings for Popular Maine Breweries") + 
   guides(color=guide_legend(title="Breweries")) +
-  geom_hline(yintercept = 57.5) 
-
-me.beers.2 <- filter(me.beers.2, style == 10)
-p2 <- ggplot(me.beers.2, aes(rAvg, num_reviews))
+  geom_hline(yintercept = brew.med) # median number of reviews
+# examining the best hoppy styles
+hop.me <- filter(me.beers.2, style_id == 150 | style_id == 140 | style_id == 97 | style_id == 116
+  style_id == 154 | style_id == 128)
+hop.med <- median(hop.me$num_reviews)
+p2 <- ggplot(hop.me, aes(rAvg, num_reviews))
 p2 + geom_point(aes(colour = factor(style)), size = 3) + 
   xlab("Beer Ratings") + 
   ylab("Number of Reviews") + 
-  ggtitle("Reviews and Ratings for Popular Maine Breweries") + 
-  guides(color=guide_legend(title="Breweries"))
+  ggtitle("Reviews and Ratings for Hoppy Maine Beers") + 
+  guides(color=guide_legend(title="Breweries")) + 
+  geom_text(aes(label=ifelse(rAvg > 4, as.character(name), '')), hjust=1.2, just=1.2) + 
+  geom_hline(yintercept = hop.med)
+# examining the worst hoppy styles
+p3 <- ggplot(hop.me, aes(rAvg, num_reviews))
+p3 + geom_point(aes(colour = factor(style)), size = 3) + 
+  xlab("Beer Ratings") + 
+  ylab("Number of Reviews") + 
+  ggtitle("Reviews and Ratings for Hoppy Maine Beers") + 
+  guides(color=guide_legend(title="Breweries")) + 
+  geom_text(aes(label=ifelse(rAvg < 3, as.character(name), '')), hjust=1.2, just=1.2) + 
+  geom_hline(yintercept = hop.med)
+
 # best and worst beers
 mt <- me.beers.2[order(me.beers.2$rAvg), ]
 top.10 <- by(mt, mt["rAvg"], head, n=10)
